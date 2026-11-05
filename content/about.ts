@@ -2,12 +2,12 @@ export const aboutHtml = `
 <header class="page">
 <div class="kicker">About the author</div>
 <h1>How I Passed CCAR-P in One Week</h1>
-<div class="sub">Peter Shang (ds) · GS-15, DoD Financial Management · Passed CCAR-P, Nov 2026</div>
+<div class="sub">Peter Shang (ds) · AI Portfolio Manager, DoD Financial Management · Passed CCAR-P, Nov 2026</div>
 </header>
 
 <h2>Who I am</h2>
 <div class="card">
-<p>I am a GS-15 AI portfolio manager at the Office of the Under Secretary of Defense (Comptroller). I lead three teams, 21 people total, building AI, ML, and RPA automation for DoD financial management. My background is governance heavy: federal accounting systems, audit remediation under FIAR and DODIG, and budget execution analytics. I did not come into this exam as a prompt engineer. I came in as an architect who already knew how to run a program, and had to learn how Anthropic wants that judgment applied to Claude specifically.</p>
+<p>I lead three teams building AI, ML, and RPA automation for DoD financial management, with hands-on depth in federal accounting systems, audit remediation under FIAR and DODIG, and budget execution analytics. I came into this exam as an architect who already knew how to run a program, and had to learn how Anthropic wants that judgment applied to Claude specifically.</p>
 </div>
 
 <h2>Why one week</h2>
@@ -44,7 +44,7 @@ export const aboutHtml = `
 
 <h3>中文</h3>
 <div class="card">
-<p class="zh">我是国防部主计长办公室的 GS-15 AI 项目经理，带领三个团队共 21 人，负责 AI/ML/RPA 自动化。我的背景偏治理和审计整改（FIAR、DODIG），不是提示工程出身。一周通过 CCAR-P 的方法：先摸清七个领域的权重和覆盖范围，建一条贯穿所有场景的决策链，写下十条用于打破平局的判断规则，按考点名称而不是感觉记录薄弱环节并按间隔复习，考前完成两次混合模考并在每个领域都达到准入标准才认为自己准备好。我最大的短板在集成领域，习惯性地倾向检测型控制（日志、确认提示），而考试想要的是架构师的答案：移除权限，或者用确定性控制挡在前面。</p>
+<p class="zh">我带领三个团队，负责国防部财务管理的 AI、ML 和 RPA 自动化，在联邦会计系统和 FIAR、DODIG 审计整改方面有扎实的实践经验。一周通过 CCAR-P 的方法：先摸清七个领域的权重和覆盖范围，建一条贯穿所有场景的决策链，写下十条用于打破平局的判断规则，按考点名称而不是感觉记录薄弱环节并按间隔复习，考前完成两次混合模考并在每个领域都达到准入标准才认为自己准备好。我最大的短板在集成领域，习惯性地倾向检测型控制（日志、确认提示），而考试想要的是架构师的答案：移除权限，或者用确定性控制挡在前面。</p>
 </div>
 
 <div class="footer-nav">
