@@ -299,6 +299,6 @@ export const productionPlaybookHtml = `
 
   <div class="footer-nav">
     <a href="/about">← About / How I Passed in a Week</a>
-    <a href="/">Overview →</a>
+    <a href="/enterprise-ai-sme">Enterprise AI Architecture SME →</a>
   </div>
 `;

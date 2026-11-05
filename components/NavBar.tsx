@@ -18,6 +18,7 @@ const resources = [
   { href: "/samples", label: "Official Samples" },
   { href: "/exam-day", label: "Exam Day" },
   { href: "/production-playbook", label: "Production Playbook" },
+  { href: "/enterprise-ai-sme", label: "Enterprise AI Architecture SME" },
 ];
 
 function Dropdown({ label, items }: { label: string; items: { href: string; label: string }[] }) {
