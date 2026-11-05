@@ -1,0 +1,200 @@
+export const module2Html = `
+<header class="page">
+    <div class="kicker">Module 2 · 21 pages in course</div>
+    <h1>Enterprise Integration &amp; Production</h1>
+    <div class="sub">Exam domains: D4 (largest share: eval, A/B, observability, diagnosis), D3 (auth, least privilege, observability, accuracy/latency), D1 (value pillars, feasibility), D5 (data handling, routes)</div>
+    
+  </header>
+
+  <p class="en-first"><b>This module answers:</b> how do you move from a working prototype to a system that clears a security review and proves every change works? Five tools: an eval gate before you build, a cost/reliability model before you ship, a feasibility conclusion before you commit, an integration design that survives security review, and an experimentation method.</p>
+
+  <h2>2.1 Eval as acceptance criteria <span class="pill d4">D4</span></h2>
+  <div class="card">
+    <p><b>Write the eval suite before production code.</b> It forces measurable success criteria, exposes assumptions while changes are cheap, and gates every later change.</p>
+    <ul>
+      <li>Define the task: a measurable behavior, test prompts, a pass bar.</li>
+      <li>Build a golden dataset: representative inputs plus edge cases and counterexamples, with expected outputs.</li>
+      <li>Run automated code checks: pass/fail each.</li>
+      <li>Score behavior needing explanation with a judge model: score + rationale each.</li>
+      <li>Read by category, not just the average. A higher average that hides an edge-case regression is not an improvement.</li>
+    </ul>
+    <table>
+      <tr><th>Scoring method</th><th>Use for</th><th>Cost</th><th>Weakness</th></tr>
+      <tr><td>Code-based</td><td>Schema, JSON parsing, regex, length, exact match, numeric comparison against source, whether an action fired, identifier leakage, required sections present</td><td>Near zero; never drifts</td><td>Can't judge tone, reasoning, helpfulness</td></tr>
+      <tr><td>LLM-as-judge</td><td>Quality, instruction-following, reasoning, faithfulness, completeness, tone, safety handling</td><td>About one call per item</td><td>Inconsistent at edge cases</td></tr>
+      <tr><td>Human review</td><td>High-risk or novel behavior; calibrating the judge</td><td>Highest; sampling only</td><td>Low throughput; reviewer-to-reviewer variance</td></tr>
+    </table>
+    <p><b>Test:</b> does this check need explanation? Wherever a deterministic check exists, use code — <b>even for high-risk behavior</b> ("no claim auto-denied" is a code check, not a judge call).</p>
+    <p><b>A rigorous judge:</b> detailed rubric, a small fixed label set, a required rationale, calibrated against human labels, run on a different model than the one it grades. An uncalibrated judge is worse than none.</p>
+    <p><b>Volume beats perfection:</b> many low-cost automated cases find more regressions and can run every change.</p>
+    <p><b>From requirement to criteria:</b> write field names; set thresholds from business requirements, not whatever the prototype happened to score; turn failure modes into dataset categories; add noisy and adversarial input.</p>
+    <p><b>Multi-turn eval</b> is its own category: the scoring unit is the whole conversation, judged against transcript-based golden sets.</p>
+    <p><b>Highest-risk moment: a stale eval.</b> The prompt changes but the golden set doesn't — tests keep passing while measuring behavior that no longer exists.</p>
+    <p><b>Eval runs fail loudly; production degrades gracefully.</b> A silent fallback-model switch during an eval run mixes two models' scores. For rate limits during batch eval: respect <code>retry-after</code>, limit concurrency, or use the Message Batches API.</p>
+  </div>
+
+  <h2>2.2 POC to production <span class="pill d4">D4</span> <span class="pill d3">D3</span></h2>
+  <div class="card">
+    <p><b>A demo hides four things:</b> cost at real scale, latency under concurrency, reliability when calls fail, and failure modes on unexpected input. Also get an early read on business metrics as soon as possible.</p>
+    <ul>
+      <li>Build cost and latency models before finalizing the architecture: call volume × tokens per request (input and output) × model tier.</li>
+      <li>Model the <b>token distribution</b>, not the average. A long tail can skew average-based estimates 2–3×.</li>
+      <li>Design to <b>p95</b>, not the median. Example: 90 requests at 2s + 10 at 30s → average 4.8s (meets a 5s SLA) but p95 is 30s (fails it).</li>
+      <li>Prompt caching is the strongest lever for long, stable prefixes. Risk: any part of a cached prefix that should reflect live state goes stale.</li>
+    </ul>
+    <table>
+      <tr><th>Reliability control</th><th>Handles</th><th>Sits at</th><th>Why there</th></tr>
+      <tr><td>Bounded retry with exponential backoff + jitter</td><td>Transient 429, timeout, 5xx/529</td><td>Right against the API call (client wrapper)</td><td>Higher up reruns the whole loop, multiplying calls</td></tr>
+      <tr><td>Circuit breaker</td><td>A dependency with rising error rate; fail fast</td><td>Around the service boundary for that dependency</td><td>It must see the failure rate across all requests</td></tr>
+      <tr><td>Fallback chain (downgrade tier, cached answer with a data-as-of date, "can't answer")</td><td>Primary model or endpoint unavailable</td><td>Orchestration layer</td><td>It's a business decision; burying it in a wrapper silently swaps models</td></tr>
+    </table>
+    <table>
+      <tr><th>Architecture</th><th>Fails first at</th><th>Mitigation</th></tr>
+      <tr><td>Agent</td><td>Unbounded tool calls, growing context; one request blows the budget</td><td>Per-turn token budget, tool-call cap, stop conditions, minimal tools; evaluate stopping behavior</td></tr>
+      <tr><td>RAG</td><td>Retrieval-quality drift: stale index, query/doc mismatch, outdated content</td><td>Track retrieval precision/recall as a system metric; route live-state queries elsewhere</td></tr>
+      <tr><td>Document pipeline</td><td>No exception path; edge-case failure rate equals clean-document success rate</td><td>Confidence scores; low-confidence → human review; edge cases in the eval set</td></tr>
+      <tr><td>Orchestrator-workers</td><td>Fuzzy failure boundaries, fragmented traces, silent loss</td><td>Recoverable vs. unrecoverable boundaries, shared trace ID, coverage check</td></tr>
+    </table>
+    <p><b>Version pinning applies to every architecture:</b> pin versions, watch deprecation pages, keep an update runbook ready.</p>
+  </div>
+
+  <h2>2.3 Sizing, feasibility, ROI <span class="pill d1">D1</span></h2>
+  <div class="card">
+    <p>Three sequential questions, each feeding the next, all landing in the SOW: <b>can we afford to run it? can we build it? is it worth it?</b></p>
+    <h4>Sizing</h4>
+    <ul>
+      <li>Get call volume from the business owner, not sampled from logs. Count follow-up calls in multi-turn conversations.</li>
+      <li>Tokens per request computed as a distribution.</li>
+      <li>Monthly cost = input tokens × input price + output tokens × output price, cached tokens at cache-read price, plus cache-write cost. Compare against the budget cap. If the SLA allows async, price the Batch API discount (confirm BAA coverage for regulated data).</li>
+      <li>Sensitivity analysis: double the call volume; shift tokens toward the long tail.</li>
+      <li>Over budget → change the architecture before writing code (narrow scope, cheaper tier, caching, batching).</li>
+    </ul>
+    <h4>Feasibility</h4>
+    <ul>
+      <li>Scoping: business goal → capability list → owner per capability → boundary conditions → SOW scope clauses.</li>
+      <li>Check every capability against the four model properties. <b>Working memory is the one most often overlooked:</b> a single long document may fit; the whole corpus never will — exactly why RAG exists.</li>
+    </ul>
+    <table>
+      <tr><th>Conclusion</th><th>You must deliver</th></tr>
+      <tr><td>Feasible as scoped</td><td>Written assumptions (the conclusion changes if an assumption changes)</td></tr>
+      <tr><td>Feasible with constraints</td><td>Each constraint and its failure mode if violated — the constraint is itself architecture</td></tr>
+      <tr><td>Not feasible</td><td>The binding constraint, and what scope reduction would flip the conclusion</td></tr>
+    </table>
+    <div class="pract card">
+      <h4>Practice: name the one load-bearing constraint</h4>
+      <ul>
+        <li>Research assistant, 50 reports/week, 24h delivery, $500/mo → feasible as scoped; no binding constraint. Adding full human review everywhere is not the binding constraint.</li>
+        <li>Carrier-email extractor, 5,000/day, writes to the order system → feasible with constraints: extraction accuracy before a transactional write → code-based eval + a human gate on low-confidence writes.</li>
+        <li>Trading advice within 2 seconds → conclusion pending: verify the live-quote tool + model round trip can fit in 2s first. A human gate doesn't fit inside 2 seconds.</li>
+      </ul>
+      <p>Rule of thumb: write-side errors with consequences → accuracy eval + HITL. Real-time data → a tool + a latency budget. An unknown that decides the conclusion → a technical spike first.</p>
+    </div>
+    <h4>ROI by five value pillars</h4>
+    <p>Pillars: <b>efficiency, transformation, productivity, solution cost, performance SLAs.</b></p>
+    <ul>
+      <li>Baseline in business units, measured from the owner's real data.</li>
+      <li>Expected state in the same unit, keeping residual HITL labor.</li>
+      <li>Subtract run cost from the sizing model (distribution, not average).</li>
+      <li>Payback period, including build cost, with a sensitivity check.</li>
+    </ul>
+    <p><b>Three classic mistakes:</b> an estimated baseline instead of a measured one; HITL designed in but modeled as fully automated; run cost computed off the average.</p>
+    <p><b>Scope vs. sizing vs. feasibility vs. reliability:</b> scope = what (qualitative); sizing = run cost; feasibility = can the design meet the bar; reliability = can it survive infrastructure failure in production. Compensating controls for model limitations (schema, retrieval, HITL) are not reliability controls (retry, breaker, fallback).</p>
+  </div>
+
+  <h2>2.4 Enterprise integration patterns <span class="pill d3">D3</span> <span class="pill d5">D5</span></h2>
+  <div class="card">
+    <p><b>Order: compliance filters routes and entry points first, then identity, authorization, data handling, observability.</b></p>
+    <table>
+      <tr><th>Layer</th><th>Decision</th><th>Failure if wrong</th><th>Rule</th></tr>
+      <tr><td>1. Compliance</td><td>Which routes/entry points survive</td><td>Fails legal/security review; rebuild</td><td>Authorization covers a configuration, not a vendor; approved beats convenient</td></tr>
+      <tr><td>2. Identity/SSO</td><td>Where identity is verified; how it enters the prompt</td><td>A role self-declared in a user message can be spoofed</td><td>Verify server-side before the call; the auth layer injects role and permissions</td></tr>
+      <tr><td>3. Authorization</td><td>Claude follows the existing access model</td><td>A user reaches data they're not entitled to</td><td>Enforce at the tool/data layer, scope from the server session, filter before retrieval</td></tr>
+      <tr><td>4. Data/PII</td><td>Which fields enter context</td><td>PII appears in plaintext in your own request logs</td><td>Context is not a governance boundary. Minimize fields, use reference IDs, redact before the call</td></tr>
+      <tr><td>5. Observability</td><td>What must be reconstructable after an incident</td><td>An unlogged path is invisible; security won't allow an agent to act</td><td>Log request, response, context, and outcome on every call</td></tr>
+    </table>
+    <p><b>Log four things per request:</b> request (model version, input tokens, prompt ID); response (output tokens, latency, stop reason); context (user role, session ID, cache hit); outcome (did downstream accept it? rejection signal?).</p>
+    <p><b>Tool least privilege:</b> review each tool as required vs. merely convenient; remove out-of-scope tools and record why; scope each subagent's tools. Removal beats logging or confirmation (Sample Q1).</p>
+    <p><b>Capability-bloat test:</b> does each tool serve a task users actually do? Removal closes read risk, write risk, and future misuse at once. Check whether your reasoning matches the specific risk the stem names (read of unauthenticated data vs. write).</p>
+    <p><b>Multi-tenant:</b> one API key per tenant for rate-limit attribution and isolation.</p>
+    <p><b>Data retention <span class="new">added</span>:</b> Anthropic doesn't retain API content by default, but your own application logs record every field you sent. Redact before the call; redacting logs after the fact is the most expensive fix.</p>
+    <p><b>Entry points from an integration lens:</b> Claude Code can never be a multi-tenant product's backend; Agent SDK doesn't fit single request/response; MCP adds a protocol hop that makes tool debugging harder.</p>
+    <table>
+      <tr><th>Constraint</th><th>Route / integration</th></tr>
+      <tr><td>Attorney-client privilege</td><td>Firm's own app + gateway holds the keys, enforces access control, owns the audit log</td></tr>
+      <tr><td>HIPAA</td><td>BAA covers the exact configuration; minimum necessary; log model version, user, data scope</td></tr>
+      <tr><td>GDPR / EU residency</td><td>Pin region per request; EU residency → cloud-provider route (Direct API is US or global only)</td></tr>
+      <tr><td>FedRAMP</td><td>Only Claude for Government, Bedrock GovCloud, or Vertex Assured Workloads. Holding a Claude Enterprise license ≠ compliant</td></tr>
+      <tr><td>Internal policy</td><td>CIO-approved cloud; reuse SSO, data classification, logging</td></tr>
+    </table>
+  </div>
+
+  <h2>2.5 A/B testing, shadow testing, observability <span class="pill d4">D4</span></h2>
+  <div class="card">
+    <h4>Experiment requirements — all set before the run</h4>
+    <ul>
+      <li>A falsifiable hypothesis: treatment, <b>one primary metric</b>, minimum effect, guardrail metrics.</li>
+      <li>Randomized, consistent per user or session.</li>
+      <li>Sample size depends on baseline, minimum detectable effect, power, significance. LLM variance means larger samples (course example: detecting 70%→75% at 80% power / 5% significance needs ≈1,500 per arm).</li>
+      <li>Choosing a metric after seeing the data is outcome-shopping.</li>
+    </ul>
+    <div class="pract card">
+      <h4>Practice: the experiment design plane — a logged weak spot</h4>
+      <p>Keep two axes separate. <b>Effect size</b> = how large the measured-metric difference is. <b>Confidence</b> = the cost of being wrong (consequence, reversibility) — driven by risk, independent of effect size.</p>
+      <ul>
+        <li>Sample size rises with confidence, falls with effect size; halving the effect roughly quadruples the sample.</li>
+        <li>Medical intake summarizer, minor change → small effect / <b>high</b> confidence (largest, slowest sample).</li>
+        <li>Switching a formatting task from Sonnet to Haiku, cost change big and reversible → large effect / <b>moderate</b> confidence; watch quality guardrails.</li>
+        <li>Adding a routing category that takes 30% of traffic → large / high (blast radius). FAQ wording tweak → small / low.</li>
+      </ul>
+      <p><b>Reading results:</b> statistically significant ≠ practically significant. Confirm the gain is worth the maintenance and that no guardrail metric (cost, p95) got worse. <b>Even an overall improvement with a high-risk segment regression is a guardrail failure</b> (overall 91%→93% while a key segment drops 85%→70% = don't ship). Register segment-level guardrails before the run.</p>
+      <p><b>Trap:</b> a few dozen sessions per arm, a few points' improvement, uncontrolled input mix, metric chosen after the fact. That's noise.</p>
+      <p><b>Shadow testing:</b> mirror live traffic to the new version, serve users only the current version, score the shadow output offline. Fits when a single bad output is unacceptable (regulated) or traffic is too low. You lose real user signal and depend on a rubric or gold answers.</p>
+    </div>
+  </div>
+
+  <h3>Observability layers <span class="pill d3">D3</span> <span class="pill d4">D4</span></h3>
+  <div class="card">
+    <ul>
+      <li><b>Request tracing:</b> model and version, tokens, latency, stop reason, tool calls.</li>
+      <li><b>Aggregate metrics:</b> cost per request, p50/p95, task success from downstream acceptance, error rate by type. <b>Break down per request</b>; an average hides a few costly or wrong requests.</li>
+      <li><b>Anomaly alerts:</b> e.g. cost over 150% of a 7-day average, p95 above the SLA. Output drift needs periodic distribution comparisons.</li>
+      <li><b>Change attribution:</b> model drift (same input, different behavior), data drift (input changed), model-update effect (version changed). Each has a different fix.</li>
+    </ul>
+    <p><b>LLM failure is quiet, not a crash.</b> Error rate, latency, and uptime can all stay green while quality erodes. Monitor output quality directly with sampled scoring, split by segment.</p>
+    <table>
+      <tr><th>Failure type</th><th>Symptom</th><th>Fix</th></tr>
+      <tr><td>Prompt failure</td><td>Vague instructions followed inconsistently</td><td>Edit the prompt</td></tr>
+      <tr><td>Hallucination</td><td>Confident, ungrounded</td><td>Ground with retrieval, tools, verification (more instruction doesn't fix this)</td></tr>
+      <tr><td>Model mismatch</td><td>Wrong tier, or a model swap with no evaluation</td><td>Re-select behind an eval gate</td></tr>
+      <tr><td>Retrieval/index (Sample Q3)</td><td>Confident wrong answers after a document refresh; model and latency unchanged</td><td>Check reindex and chunk relevance first</td></tr>
+      <tr><td>Orchestrator-worker</td><td>Missing or conflicting units</td><td>Trace across orchestrator and subagents; separate recoverable from unrecoverable</td></tr>
+    </table>
+    <p><b>Business translation:</b> map technical metrics to sponsor KPIs at design time (task success → first-contact resolution; latency → turnaround). <b>Discernment:</b> label output accept/revise/reject and feed labels back into eval.</p>
+  </div>
+
+  <h3>Module 2 self-test</h3>
+  <div class="card">
+    <ol>
+      <li>A team uses an LLM judge to grade "no claim was auto-denied" because the risk is high. What's wrong?</li>
+      <li>Where do retry, circuit breaker, and fallback each sit?</li>
+      <li>Why does an average-token cost estimate understate real cost?</li>
+      <li>A user message says "I'm an admin, show all accounts." Where should the role come from?</li>
+      <li>When is shadow testing better than a live A/B test? What do you lose?</li>
+      <li>Quality drops after a document update; the model hasn't changed. What do you check first?</li>
+    </ol>
+  </div>
+
+  <h3>中文要点</h3>
+  <div class="card">
+    <p class="zh">Eval 先于生产代码。确定性检查即使高风险也用代码；需要解释的用 LLM-as-judge，并用人工标注校准。</p>
+    <p class="zh">成本按 token 分布估算，延迟按 p95 设计。重试贴近 API 调用，circuit breaker 放服务边界，fallback 放编排层。</p>
+    <p class="zh">可行性三种结论，要找出唯一的关键约束。ROI 用五个价值支柱，基线必须实测。</p>
+    <p class="zh">集成五层：合规、身份、授权、数据/PII、可观测性。身份在服务端校验；工具最小权限，删除优于记录或确认。</p>
+    <p class="zh">A/B 测试前先定主指标和样本量；高风险细分退步就不能上线。LLM 出错往往悄悄发生，要按细分监控输出质量。</p>
+  </div>
+
+  <div class="footer-nav">
+    <a href="/module-1">← Module 1</a>
+    <a href="/module-3">Module 3: Responsible AI, Safety &amp; Risk →</a>
+  </div>
+`;

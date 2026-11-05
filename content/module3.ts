@@ -1,0 +1,170 @@
+export const module3Html = `
+<header class="page">
+    <div class="kicker">Module 3 · ~22 pages in course</div>
+    <h1>Responsible AI, Safety &amp; Risk for Architects</h1>
+    <div class="sub">Exam domains: D5 (all five objectives), plus D3 (auth and capability gaps) and D4 (failure diagnosis)</div>
+    
+  </header>
+
+  <p class="en-first"><b>This module answers:</b> what stops the system from refusing a legitimate request, producing an unfair outcome, or taking an action no one approved? Safety is a layered system. Every layer has a blind spot the next layer must cover. The architect decides where each layer sits and how it behaves when it fails.</p>
+
+  <h2>3.1 The alignment boundary <span class="pill d5">D5</span></h2>
+  <div class="card">
+    <ul>
+      <li><b>Training-time alignment (Anthropic's job):</b> Claude is trained against the published constitution (priority: broadly safe, ethical, policy-compliant, genuinely helpful — an overall balance). It lowers baseline risk for broadly harmful categories on every request, the same for every user.</li>
+      <li><b>Inference-time control (your job):</b> system instructions, runtime screening, tool authorization, human review. These enforce deployment-specific rules.</li>
+      <li><b>Claude cannot enforce a rule it was never told.</b> Your domain policy, data rules, and authorization model are not in the training.</li>
+    </ul>
+    <table>
+      <tr><th>Layer</th><th>Covers</th><th>Misses</th><th>Owner</th></tr>
+      <tr><td>Trained behavior</td><td>Broadly harmful content</td><td>Domain policy, data rules, authorization</td><td>Anthropic</td></tr>
+      <tr><td>System-prompt instructions</td><td>Role, tone, stated limits</td><td>Anything a strange or adversarial input can talk it out of</td><td>Architect</td></tr>
+      <tr><td>Runtime screening</td><td>Disallowed content in input/output</td><td>Actions with side effects; novel attacks</td><td>Architect</td></tr>
+      <tr><td>Authorization</td><td>Can this caller do this now</td><td>Content quality and fairness</td><td>Architect</td></tr>
+    </table>
+  </div>
+  <div class="card trap">
+    <h4>Exam trap</h4>
+    <p>"Claude refused every harmful test prompt, so it will also block cross-tenant access." Wrong. A normal-looking in-domain request that violates a policy exists in none of those layers. Broad harm → trained behavior. Tenant isolation, approved phrasing, refund sign-off, program eligibility → the application layer.</p>
+  </div>
+
+  <h2>3.2 Risk categories and assessment <span class="pill d5">D5</span></h2>
+  <div class="card">
+    <table>
+      <tr><th>Risk</th><th>What happens</th><th>Control sits at</th></tr>
+      <tr><td>Direct prompt injection</td><td>User input overrides instructions</td><td>Input screening; structure over instruction</td></tr>
+      <tr><td>Indirect prompt injection</td><td>Instructions hidden in retrieved documents or tool output treated as trusted content. <b>The primary attack path for RAG and agents</b>; invisible to user-input screening entirely</td><td>Screen retrieved content and tool output before adding it to context</td></tr>
+      <tr><td>Token-budget exhaustion</td><td>Padded input truncates work or spikes cost</td><td>Input limits, budgets</td></tr>
+      <tr><td>Tool and action abuse</td><td>Model is induced to call a side-effecting tool outside policy</td><td>Deterministic tool authorization; least privilege</td></tr>
+      <tr><td>Data exposure</td><td>Sensitive fields enter context or logs regardless of model behavior</td><td>Minimize and redact before the call</td></tr>
+    </table>
+    <div class="pract card">
+      <h4>Practice: a written risk assessment</h4>
+      <p>Walk the request path and the data path together. At every entry point (user input, retrieved content, tool output, model output, logs), ask: what could an attacker do? which control stops it? A plausible attack with no matching control is a finding. Log per risk: category, affected component, likelihood and impact, mitigating control, owner, evidence. A security reviewer signs this document.</p>
+    </div>
+  </div>
+
+  <h2>3.3 Placing guardrails on the request path <span class="pill d5">D5</span> <span class="pill d3">D3</span></h2>
+  <div class="card">
+    <p><b>Three decision points, each answering a different question.</b> A control at one point does nothing for the others — an output filter at the end can't stop a refund tool that already fired.</p>
+    <table>
+      <tr><th>Control point</th><th>Question</th><th>Use a model when</th><th>Use a deterministic rule when</th></tr>
+      <tr><td>1. Input screening</td><td>Should this request reach the model?</td><td>Ambiguous intent, jailbreak/injection patterns</td><td>Blocklist, regex, length, format</td></tr>
+      <tr><td>2. Output screening</td><td>Can this output be returned safely?</td><td>Toxicity, policy compliance (judge)</td><td>Known strings, disallowed fields, schema violations</td></tr>
+      <tr><td>3. Tool-call authorization</td><td>Can this caller do this action in this context?</td><td>Rarely</td><td><b>Almost always:</b> allowlist + identity + scope, provable and replayable</td></tr>
+    </table>
+    <p>A classifier can be talked around; a rule is brittle. Chain them and write down what each one misses.</p>
+    <p><b>Fail closed</b> everywhere a wrong pass-through causes harm. If you don't choose a direction, surrounding code usually lets traffic through — a guardrail that silently fails open is worse than none. Log every block or failure at a gate. This applies to components you build yourself; Anthropic's built-in safety controls can't be configured by the operator <span class="new">added</span>.</p>
+    <p><b>Refusals <span class="new">verify docs</span>:</b> the API returns <code>stop_reason: "refusal"</code>, possibly with a nullable details object. Handle it per category and reset or rewrite the refused turn; resending on the refused context keeps getting refused.</p>
+    <p><b>Reference path:</b> request → input screening (fail closed) → model → output screening (fail closed) → deterministic authorization before any side effect → response, logged at every gate.</p>
+  </div>
+  <div class="card">
+    <h4>Skill supply-chain security</h4>
+    <ul>
+      <li>A Skill is distributed code plus instructions; malicious logic in the package is invisible to conversation-level screening.</li>
+      <li>Audit before trusting: network, shell, filesystem, credential reads, behavior beyond the stated purpose.</li>
+      <li>Runtime isolation as a safety net: least privilege, sandboxing, limited file/network access, no standing credentials.</li>
+      <li>Trusted-source policy: internal repos, verified publishers, signed releases. Don't assume the platform vets a Skill for you.</li>
+      <li>Record every audit outcome: approved, rejected, or re-audited after remediation.</li>
+    </ul>
+  </div>
+
+  <h2>3.4 Fairness and transparency <span class="pill d5">D5</span></h2>
+  <div class="card">
+    <p><b>Fairness is an architectural property with four injection points you control:</b></p>
+    <ul>
+      <li><b>Retrieval corpus:</b> over- or under-representation, outdated or single-region guidance.</li>
+      <li><b>Prompt framing:</b> embedded assumptions ("flag suspicious applications" nudges toward denial).</li>
+      <li><b>Few-shot examples:</b> same skew risk as the corpus.</li>
+      <li><b>Downstream routing:</b> who gets human review, who gets auto-decided.</li>
+    </ul>
+    <table>
+      <tr><th>Audience</th><th>Needs from the same decision record</th></tr>
+      <tr><td>Affected user</td><td>Why the decision happened, in actionable terms (a concrete denial reason)</td></tr>
+      <tr><td>Regulator</td><td>Consistent handling of comparable cases; ability to reconstruct any decision</td></tr>
+      <tr><td>Dev team</td><td>Full trace: prompt version, retrieved content, output, every routing step</td></tr>
+    </table>
+    <p><b>Decision logging:</b> input, retrieved document IDs, prompt version, example set, output, routing path — indexed so a single decision can be replayed. Build it once; every audience draws from it.</p>
+    <p><b>Gaps to find:</b> an unlogged routing step, retrieved content that was never captured, outputs stored with no inputs, overall accuracy with no sub-group breakdown. The decision log is itself sensitive data — minimize, limit retention, control access.</p>
+  </div>
+  <div class="card trap">
+    <h4>Exam trap</h4>
+    <p>"The vendor ran a bias evaluation" or "the model was trained to be fair, so fairness is handled." Your corpus, framing, examples, and routing create skew the vendor never saw. Instrument and monitor it; don't assume it's a built-in model property.</p>
+  </div>
+
+  <h2>3.5 Human-review routing by stakes <span class="pill d5">D5</span></h2>
+  <div class="card">
+    <p>Treat reviewer attention as a fixed budget. <b>Reversibility and error cost set the risk tier.</b> <b>Confidence</b> estimates how likely an output is wrong; it sets volume, not risk — and it's only useful when calibrated.</p>
+    <p><b>Rule:</b> low confidence <b>and</b> irreversible or high-cost → route to a human. When signals conflict, weight cost and reversibility more heavily. Route by risk, not by volume.</p>
+    <table>
+      <tr><th>Placement</th><th>Gives you</th><th>Costs</th><th>Fits</th></tr>
+      <tr><td>Pre-action approval</td><td>Nothing irreversible happens unreviewed</td><td>Latency; depends on reviewer availability; doesn't scale</td><td>High-risk, irreversible (a low-confidence denial)</td></tr>
+      <tr><td>Post-action audit</td><td>High throughput</td><td>The error already happened</td><td>Reversible, lower-cost</td></tr>
+      <tr><td>Sampled review</td><td>Monitors quality without slowing the flow</td><td>Individual bad cases can slip through</td><td>Monitoring the whole system</td></tr>
+    </table>
+    <p><b>The reviewer's interface determines whether review is real:</b> show the input, the model output, and the specific reason it was flagged.</p>
+    <p><b>Two independent failures, either one disables review:</b> too much volume (consent fatigue, review becomes rubber-stamping) and missing context. Anthropic's own agentic research leans toward fewer step-by-step approvals and review concentrated at higher-value checkpoints (plan review, exceptions) — which is why Claude Code has plan-level approval.</p>
+  </div>
+
+  <h2>3.6 Compliance: from obligation to evidenced controls <span class="pill d5">D5</span></h2>
+  <div class="card">
+    <p><b>The route is a prerequisite, not proof.</b> Every obligation becomes three things: a specific technical control, a named owner, and continuously updated evidence (the most commonly missing piece).</p>
+    <table>
+      <tr><th>Obligation</th><th>Control</th><th>Evidence</th><th>Owner</th></tr>
+      <tr><td>HIPAA PHI</td><td>HIPAA-ready plan or a BAA'd API; HIPAA settings on; only in-scope features</td><td>Signed BAA, admin-console config screenshot, compliant-feature list</td><td>Security lead</td></tr>
+      <tr><td>FedRAMP impact level</td><td>An authorized route meeting or exceeding the required level</td><td>Authorization record; proof the workload only runs in that environment</td><td>Platform lead</td></tr>
+      <tr><td>Data residency</td><td>In-region processing and storage, logs/cache/monitoring included</td><td>Residency config + a data-flow record of every copy</td><td>Data owner</td></tr>
+      <tr><td>Decisions reconstructable</td><td>Retained, queryable decision log</td><td>A reconstructed example from live logs</td><td>Architect</td></tr>
+    </table>
+    <p><b>Not used for training ≠ not retained.</b> Data can be excluded from training and still be retained for logging, abuse prevention, or legal reasons.</p>
+    <p>Reviewers accept signed agreements, config screenshots, authorization records, or a log query that returns a result. They don't accept a design doc that names a control with no owner and no evidence (same logic as FIAR KSDs and A-123 testing).</p>
+    <p>Configurations drift; revalidate the register periodically. "A prompt instruction to handle health data carefully" is not HIPAA evidence. A BAA plus an enabled configuration is.</p>
+  </div>
+
+  <h2>3.7 Assembling the safety stack (order matters)</h2>
+  <div class="card">
+    <ol>
+      <li>Draw the boundary: domain rules in the application layer; explicit rules into a deterministic rules engine; Claude drafts the explanation.</li>
+      <li>Place input, output, and authorization controls; pick a check type for each; fail closed.</li>
+      <li>Instrument the four fairness injection points, serving all audiences from one decision log.</li>
+      <li>Route review by risk; pre-action approval for low-confidence, hard-to-reverse harm.</li>
+      <li>Build the control register: obligation → control → owner → evidence.</li>
+    </ol>
+    <p>Steps 3 and 4 depend on logging; step 5 depends on evidence from steps 2–4.</p>
+  </div>
+
+  <div class="card weak">
+    <h4>Your logged weak spots — Module 3</h4>
+    <ul>
+      <li><b>Implement guardrails and safety controls:</b> a Skill or prompt can't enforce; a hook or authorization can. Scope comes from the server-side session, never from a model-supplied tool parameter. Watch your pull toward detective controls (trace IDs, logging) when a preventive option is available.</li>
+      <li><b>Ensure compliance with regulations:</b> filter by authorization first. For CUI/FedRAMP, Claude Enterprise is excluded regardless of license count. Reason from the exam's rule, not "DoD already uses Bedrock."</li>
+      <li><b>Identify risks, limitations, failure modes:</b> drill the four model properties until they're reflexive.</li>
+    </ul>
+  </div>
+
+  <h3>Module 3 self-test</h3>
+  <div class="card">
+    <ol>
+      <li>Which layer enforces "never show tenant A's data to tenant B"? Why can't trained behavior do it?</li>
+      <li>A RAG agent executes instructions hidden in a retrieved page. What risk is this, and where does the control sit?</li>
+      <li>Name the three components of deterministic tool authorization.</li>
+      <li>Your screening service times out at peak load and requests pass through anyway. What's wrong?</li>
+      <li>A decision is high-confidence but irreversible and high-cost — route to a human? What variables decide it?</li>
+      <li>What three things does every obligation in the register need?</li>
+    </ol>
+  </div>
+
+  <h3>中文要点</h3>
+  <div class="card">
+    <p class="zh">安全是分层体系。训练对齐只覆盖广泛有害内容；领域规则、租户隔离、授权必须在应用层实现。</p>
+    <p class="zh">间接 prompt injection 来自检索内容和工具输出，是 RAG/agent 的主要威胁，要在加入上下文前筛查。</p>
+    <p class="zh">三个控制点：输入筛查、输出筛查、工具调用授权。授权必须确定性（allowlist + 身份 + 范围）。自建护栏要 fail closed。</p>
+    <p class="zh">公平的四个注入点：语料、prompt 措辞、示例、下游路由。一份决策日志服务用户、监管、开发三类受众。</p>
+    <p class="zh">人工审核按风险（可逆性 + 错误成本）路由，置信度只决定数量。每项合规义务要有控制、负责人、证据。</p>
+  </div>
+
+  <div class="footer-nav">
+    <a href="/module-2">← Module 2</a>
+    <a href="/module-4">Module 4: Stakeholder Communication &amp; Lifecycle →</a>
+  </div>
+`;

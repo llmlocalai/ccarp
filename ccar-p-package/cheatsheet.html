@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CCAR-P · Cheat Sheet — Stem Signal → Answer</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="page">
+    <div class="kicker">Section 7 equivalent · the ONLY page to re-read 12:00–1:30 the day before</div>
+    <h1>One-Page Cheat Sheet: Stem Signal → Answer</h1>
+    <div class="sub">If the stem says ... → lean toward ...</div>
+    <nav class="top">
+      <a href="index.html">Overview</a>
+      <a href="module1.html">M1 Platform &amp; Design</a>
+      <a href="module2.html">M2 Integration &amp; Production</a>
+      <a href="module3.html">M3 Responsible AI &amp; Risk</a>
+      <a href="module4.html">M4 Stakeholder &amp; Lifecycle</a>
+      <a href="module5.html">M5 Team Enablement</a>
+      <a class="active" href="cheatsheet.html">Cheat Sheet</a>
+      <a href="objectives-index.html">Objective Index</a>
+      <a href="samples.html">Official Samples</a>
+      <a href="exam-day.html">Exam Day</a>
+    </nav>
+  </header>
+
+  <div class="card">
+    <table class="cheat-table">
+      <tr><td>Agent has a tool its role never needs</td><td>Remove it (not logging, not a confirmation, not a bigger model)</td></tr>
+      <tr><td>A rule is already in the prompt and still fails</td><td>Deterministic control: hook, authorization, schema. Not more instruction, not a Skill</td></tr>
+      <tr><td>Threshold, eligibility, priority, coverage rules</td><td>Deterministic code / rules engine; Claude extracts and narrates</td></tr>
+      <tr><td>Order status, inventory, balance, queue + retrieval</td><td>Replace retrieval with a tool call to the system of record</td></tr>
+      <tr><td>Same large static prompt every call; cost and latency</td><td>Static first, dynamic last; enable prompt caching</td></tr>
+      <tr><td>60 tools loaded, only 3–5 used; slow, expensive, mis-picks</td><td>Progressive discovery: a small core set, the rest on demand</td></tr>
+      <tr><td>Only one client will use this integration</td><td>Direct tool call or API, not MCP</td></tr>
+      <tr><td>Multiple Claude clients need the same tool set</td><td>MCP</td></tr>
+      <tr><td>Path is enumerable, but the stakeholder wants "flexibility"</td><td>Workflow (routing/chaining/parallel/evaluator-optimizer), not agent</td></tr>
+      <tr><td>Parallel aggregation claims completeness but a unit is missing</td><td>Coverage check at aggregation; retry and flag the gap</td></tr>
+      <tr><td>Which model?</td><td>The smallest tier that clears the eval bar; default Sonnet; tier per step</td></tr>
+      <tr><td>Confident wrong answers after a document update</td><td>Check retrieval/index first (stale or mismatched chunks)</td></tr>
+      <tr><td>Infra dashboard all green, users say answers are worse</td><td>Sampled output-quality scoring, split by segment</td></tr>
+      <tr><td>High-risk deterministic check</td><td>Code-based scoring, not LLM-as-judge</td></tr>
+      <tr><td>Overall improved, but a high-risk segment regressed</td><td>Don't ship; segment guardrail failed</td></tr>
+      <tr><td>Small-sample A/B, metric chosen after the fact</td><td>Noise; register metric and sample size before the run</td></tr>
+      <tr><td>One wrong output is unacceptable, or traffic is very low</td><td>Shadow testing</td></tr>
+      <tr><td>429s during an eval run</td><td>Backoff honoring retry-after, limit concurrency, or Batches API — never silently downgrade</td></tr>
+      <tr><td>A user message self-declares a role</td><td>Server-side identity; scope from the session; enforce at the tool/data layer</td></tr>
+      <tr><td>PII in request logs</td><td>Minimize and redact before the call; use reference IDs</td></tr>
+      <tr><td>CUI / FedRAMP workload</td><td>Only Claude for Government, Bedrock GovCloud, or Vertex Assured Workloads</td></tr>
+      <tr><td>EU data-residency requirement</td><td>A cloud-provider route with an explicit region (Direct API is US or global only)</td></tr>
+      <tr><td>Attorney-client privilege, the firm must own the audit trail</td><td>API/SDK behind the firm's own app and gateway</td></tr>
+      <tr><td>Instructions hidden in retrieved documents or tool output</td><td>Indirect prompt injection: screen retrieved content before it enters context</td></tr>
+      <tr><td>A screening service times out, traffic passes through anyway</td><td>Fail closed, and log it</td></tr>
+      <tr><td>Irreversible, low-confidence decision</td><td>Pre-action human approval, showing the input and the flag reason</td></tr>
+      <tr><td>Compliance "proof"</td><td>Control + owner + evidence (BAA, config screenshot, log query)</td></tr>
+      <tr><td>Stakeholder says "seamless," "just a quick check"</td><td>Dig into the real constraint; ask all four discovery categories first</td></tr>
+      <tr><td>Tradeoff readout</td><td>Get, lose, reversal cost, compliance posture</td></tr>
+      <tr><td>Quality slowly declining, no alert</td><td>An owned trend trigger; a calendar audit in regulated settings</td></tr>
+      <tr><td>Outcome doc for a CFO</td><td>Auditable-control-backed before/after business metrics; never "reuse potential"</td></tr>
+      <tr><td>Standardized on AWS + in-region + latency sensitive</td><td>Bedrock as primary (explicit region) + Direct API as secondary for unregulated work</td></tr>
+      <tr><td>A shared Skill needs team-level rollback</td><td>Plugin (versioned); program caller → API Skill; repo asset → project Skill</td></tr>
+      <tr><td>Tests green, review approved, author can't explain the code</td><td>Pause the merge; checklist (understanding, security)</td></tr>
+      <tr><td>Quality declining gradually, no code change</td><td>Rerun eval; check model, prompt, retrieval drift</td></tr>
+      <tr><td>Model version unpinned, never re-validated <span class="new">added</span></td><td>Pin the version; gate every swap with a tiered test set and a pre-set threshold</td></tr>
+      <tr><td>A numbered-section policy corpus like the FMR <span class="new">added</span></td><td>Hierarchical chunking, section path kept on each chunk</td></tr>
+      <tr><td>Someone proposes a "never allowed" rule go into CLAUDE.md <span class="new">added</span></td><td>Governing layer instead: hook, permission, sandbox</td></tr>
+      <tr><td>A feasibility conclusion hinges on one unknown <span class="new">added</span></td><td>Run a technical spike first; don't conclude yet</td></tr>
+    </table>
+  </div>
+
+  <div class="card rule">
+    <h4>Per-item method</h4>
+    <ol>
+      <li>Underline the specific risk or constraint the stem names.</li>
+      <li>Locate the matching step on the decision chain (overview page §3).</li>
+      <li>Eliminate options that solve a different risk, that substitute instruction for structure, or that only detect without preventing.</li>
+      <li>Pick the lightest option that removes the root cause.</li>
+    </ol>
+  </div>
+
+  <div class="footer-nav">
+    <a href="module5.html">← Module 5</a>
+    <a href="exam-day.html">Exam-Day Strategy →</a>
+  </div>
+</div>
+</body>
+</html>

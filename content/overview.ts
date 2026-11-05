@@ -1,0 +1,274 @@
+export const overviewHtml = `
+<header class="page">
+    <div class="kicker">CCAR-P Study Package · Claude Certified Architect – Professional</div>
+    <h1>Overview &amp; Big Picture / 全局图</h1>
+    <div class="sub">Exam Guide v1.0 · 63 items · 120 min · pass = 720/1000 · Peter's exam: Wed Dec 2, 2026, 10:00am</div>
+    
+  </header>
+
+  <h2>1. How this package maps to the exam <span class="tag">read first</span></h2>
+  <p>Five Skilljar modules feed seven exam domains. Domain weight is not module weight — D3 Integration (19%, the single biggest domain) is split across Module 1 (RAG, protocols, context strategy) and Module 2 (auth, observability, accuracy/latency). Treat the table below as the map every other page in this package points back to.</p>
+  <div class="card">
+    <table>
+      <tr><th>Module (course)</th><th>Exam domain(s)</th><th>Weight</th><th>Teaches you to</th></tr>
+      <tr><td>M1 Claude Platform &amp; Solution Design</td><td>D1, D2, part of D3 (RAG, protocols, progressive vs. monolithic)</td><td>17% + 13% + part of 19%</td><td>Turn a fuzzy business problem into a defensible architecture</td></tr>
+      <tr><td>M2 Enterprise Integration &amp; Production</td><td>D3, D4 (plus D1 sizing/ROI)</td><td>19% + 16%</td><td>Push a POC to production: eval, cost, reliability, integration, experiments</td></tr>
+      <tr><td>M3 Responsible AI, Safety &amp; Risk</td><td>D5 (plus D3 security gaps)</td><td>14%</td><td>Build the safety stack: where each control sits, how it fails</td></tr>
+      <tr><td>M4 Stakeholder Engagement &amp; Lifecycle</td><td>D6 (plus D3/D5 routing)</td><td>14%</td><td>Run discovery, frame tradeoffs, close feedback loops, document, prove outcomes</td></tr>
+      <tr><td>M5 Team Enablement &amp; Ops Productivity</td><td>D7 (plus D4 diagnosis)</td><td>7%</td><td>Hand off a live system so it runs without you</td></tr>
+    </table>
+    <p class="zh">五门课程对应七个考试领域。M1 和 M2 合计约占考试的 65%。D3 集成（19%，最大单一领域）分布在 M1 和 M2 中。</p>
+  </div>
+
+  <h2>2. Blueprint weights <span class="tag">D1–D7</span></h2>
+  <figure>
+    <svg viewBox="0 0 860 340" xmlns="http://www.w3.org/2000/svg">
+      <style>
+        .axislbl{font:12px 'Segoe UI',sans-serif; fill:#9fb0cf}
+        .vlbl{font:13px 'Segoe UI',sans-serif; fill:#e7ecf7; font-weight:600}
+        .dlbl{font:12.5px 'Segoe UI',sans-serif; fill:#e7ecf7}
+      </style>
+      <!-- baseline -->
+      <line x1="140" y1="300" x2="820" y2="300" stroke="#2a3550" stroke-width="1"/>
+      <!-- bars: D1 17, D2 13, D3 19, D4 16, D5 14, D6 14, D7 7 ; scale 12px per % -->
+      <!-- D1 -->
+      <rect x="140" y="96" width="80" height="204" fill="#5aa9ff" rx="4"/>
+      <text class="vlbl" x="180" y="88" text-anchor="middle">17%</text>
+      <text class="dlbl" x="180" y="318" text-anchor="middle">D1</text>
+      <text class="axislbl" x="180" y="334" text-anchor="middle">Solution Design</text>
+      <!-- D2 -->
+      <rect x="240" y="144" width="80" height="156" fill="#9b7bff" rx="4"/>
+      <text class="vlbl" x="280" y="136" text-anchor="middle">13%</text>
+      <text class="dlbl" x="280" y="318" text-anchor="middle">D2</text>
+      <text class="axislbl" x="280" y="334" text-anchor="middle">Models &amp; Context</text>
+      <!-- D3 -->
+      <rect x="340" y="72" width="80" height="228" fill="#ff8a5b" rx="4"/>
+      <text class="vlbl" x="380" y="64" text-anchor="middle">19%</text>
+      <text class="dlbl" x="380" y="318" text-anchor="middle">D3</text>
+      <text class="axislbl" x="380" y="334" text-anchor="middle">Integration</text>
+      <!-- D4 -->
+      <rect x="440" y="108" width="80" height="192" fill="#7ee0c3" rx="4"/>
+      <text class="vlbl" x="480" y="100" text-anchor="middle">16%</text>
+      <text class="dlbl" x="480" y="318" text-anchor="middle">D4</text>
+      <text class="axislbl" x="480" y="334" text-anchor="middle">Evaluation</text>
+      <!-- D5 -->
+      <rect x="540" y="132" width="80" height="168" fill="#ff6b9d" rx="4"/>
+      <text class="vlbl" x="580" y="124" text-anchor="middle">14%</text>
+      <text class="dlbl" x="580" y="318" text-anchor="middle">D5</text>
+      <text class="axislbl" x="580" y="334" text-anchor="middle">Governance &amp; Risk</text>
+      <!-- D6 -->
+      <rect x="640" y="132" width="80" height="168" fill="#ffd166" rx="4"/>
+      <text class="vlbl" x="680" y="124" text-anchor="middle">14%</text>
+      <text class="dlbl" x="680" y="318" text-anchor="middle">D6</text>
+      <text class="axislbl" x="680" y="334" text-anchor="middle">Stakeholder</text>
+      <!-- D7 -->
+      <rect x="740" y="216" width="80" height="84" fill="#8fe0ff" rx="4"/>
+      <text class="vlbl" x="780" y="208" text-anchor="middle">7%</text>
+      <text class="dlbl" x="780" y="318" text-anchor="middle">D7</text>
+      <text class="axislbl" x="780" y="334" text-anchor="middle">Dev Productivity</text>
+    </svg>
+    <figcaption>Scored-item share by content domain (Exam Guide §6). D3 Integration is the single largest domain.</figcaption>
+  </figure>
+
+  <h2>3. The architect's decision chain <span class="tag">one spine for every scenario</span></h2>
+  <p>Every scenario item lands on one step of this chain. Name the step before you touch the options — it tells you which rule set applies.</p>
+  <figure>
+    <svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg">
+      <style>
+        .stepbox{fill:#161d2e; stroke:#2a3550; stroke-width:1.5}
+        .stepnum{font:13px 'Segoe UI',sans-serif; fill:#5aa9ff; font-weight:700}
+        .steptxt{font:13px 'Segoe UI',sans-serif; fill:#e7ecf7}
+        .stepsub{font:11px 'Segoe UI',sans-serif; fill:#9fb0cf}
+        .arrow{stroke:#9fb0cf; stroke-width:1.5; marker-end:url(#arrowhead)}
+      </style>
+      <defs>
+        <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#9fb0cf"/>
+        </marker>
+      </defs>
+      <!-- 12 steps, 2 col layout -->
+      <!-- step template function manual -->
+      <!-- 1 -->
+      <rect class="stepbox" x="20" y="10" width="420" height="52" rx="8"/>
+      <text class="stepnum" x="34" y="32">1</text>
+      <text class="steptxt" x="54" y="30">Discovery — must do / must not / must cost / must prove</text>
+      <text class="stepsub" x="54" y="48">[M4]</text>
+      <line class="arrow" x1="230" y1="62" x2="230" y2="86"/>
+      <!-- 2 -->
+      <rect class="stepbox" x="20" y="88" width="420" height="52" rx="8"/>
+      <text class="stepnum" x="34" y="110">2</text>
+      <text class="steptxt" x="54" y="108">Decomposition — Claude / existing system / human</text>
+      <text class="stepsub" x="54" y="126">[M1]</text>
+      <line class="arrow" x1="230" y1="140" x2="230" y2="164"/>
+      <!-- 3 -->
+      <rect class="stepbox" x="20" y="166" width="420" height="52" rx="8"/>
+      <text class="stepnum" x="34" y="188">3</text>
+      <text class="steptxt" x="54" y="186">Pattern — augmented LLM / workflow / agent, by binding constraint</text>
+      <text class="stepsub" x="54" y="204">[M1]</text>
+      <line class="arrow" x1="230" y1="218" x2="230" y2="242"/>
+      <!-- 4 -->
+      <rect class="stepbox" x="20" y="244" width="420" height="52" rx="8"/>
+      <text class="stepnum" x="34" y="266">4</text>
+      <text class="steptxt" x="54" y="264">Reference architecture + its typical failure mode</text>
+      <text class="stepsub" x="54" y="282">[M1]</text>
+      <line class="arrow" x1="230" y1="296" x2="230" y2="320"/>
+      <!-- 5 -->
+      <rect class="stepbox" x="20" y="322" width="420" height="52" rx="8"/>
+      <text class="stepnum" x="34" y="344">5</text>
+      <text class="steptxt" x="54" y="342">Entry point → build-time interface → delivery route (governance excludes first)</text>
+      <text class="stepsub" x="54" y="360">[M1, M4]</text>
+      <line class="arrow" x1="230" y1="374" x2="230" y2="398"/>
+      <!-- 6 -->
+      <rect class="stepbox" x="20" y="400" width="420" height="52" rx="8"/>
+      <text class="stepnum" x="34" y="422">6</text>
+      <text class="steptxt" x="54" y="420">Model tier, context strategy, prompt + caching structure</text>
+      <text class="stepsub" x="54" y="438">[M1]</text>
+      <line class="arrow" x1="230" y1="452" x2="230" y2="476"/>
+      <!-- 7 -->
+      <rect class="stepbox" x="20" y="478" width="420" height="52" rx="8"/>
+      <text class="stepnum" x="34" y="500">7</text>
+      <text class="steptxt" x="54" y="498">Sizing, feasibility, ROI — before you commit to build</text>
+      <text class="stepsub" x="54" y="516">[M2]</text>
+      <line class="arrow" x1="230" y1="530" x2="230" y2="554"/>
+      <!-- 8 -->
+      <rect class="stepbox" x="20" y="556" width="420" height="52" rx="8"/>
+      <text class="stepnum" x="34" y="578">8</text>
+      <text class="steptxt" x="54" y="576">Five integration layers: compliance, identity, authz, data/PII, observability</text>
+      <text class="stepsub" x="54" y="594">[M2]</text>
+
+      <!-- connector from col1 bottom to col2 top -->
+      <path class="arrow" d="M 440 582 C 480 582, 480 32, 480 32" fill="none"/>
+
+      <!-- col2 -->
+      <!-- 9 -->
+      <rect class="stepbox" x="460" y="10" width="420" height="52" rx="8"/>
+      <text class="stepnum" x="474" y="32">9</text>
+      <text class="steptxt" x="494" y="30">Write eval gates before code; A/B or shadow-test every change</text>
+      <text class="stepsub" x="494" y="48">[M2]</text>
+      <line class="arrow" x1="670" y1="62" x2="670" y2="86"/>
+      <!-- 10 -->
+      <rect class="stepbox" x="460" y="88" width="420" height="52" rx="8"/>
+      <text class="stepnum" x="474" y="110">10</text>
+      <text class="steptxt" x="494" y="108">Safety stack: boundary, 3 control points, fairness logging, review routing, control register</text>
+      <text class="stepsub" x="494" y="126">[M3]</text>
+      <line class="arrow" x1="670" y1="140" x2="670" y2="164"/>
+      <!-- 11 -->
+      <rect class="stepbox" x="460" y="166" width="420" height="52" rx="8"/>
+      <text class="stepnum" x="474" y="188">11</text>
+      <text class="steptxt" x="494" y="186">Communicate &amp; sustain: tradeoffs, feedback loop + SLA, docs, outcome doc</text>
+      <text class="stepsub" x="494" y="204">[M4]</text>
+      <line class="arrow" x1="670" y1="218" x2="670" y2="242"/>
+      <!-- 12 -->
+      <rect class="stepbox" x="460" y="244" width="420" height="52" rx="8"/>
+      <text class="stepnum" x="474" y="266">12</text>
+      <text class="steptxt" x="494" y="264">Hand off: shared baseline, Skill distribution, verification checklist, runbook</text>
+      <text class="stepsub" x="494" y="282">[M5]</text>
+    </svg>
+    <figcaption>12-step architect decision chain. Every exam scenario lands on one box — identify it before reading the options.</figcaption>
+  </figure>
+
+  <h2>4. Ten judgment rules <span class="tag">tie-breakers</span></h2>
+  <p>When two options both look right, one of these usually settles it.</p>
+  <div class="card rule">
+    <table>
+      <tr><th>#</th><th>Rule</th><th>Where</th></tr>
+      <tr><td>1</td><td><b>Remove &gt; prevent &gt; instruct &gt; detect.</b> Remove the capability if you can; else a deterministic preventive control (hook, schema, DB permission, authz); only then instruction; logging/review last. (Enforcement ladder — Sample Q1.)</td><td>M1,M2,M3</td></tr>
+      <tr><td>2</td><td><b>Solve the risk the stem names.</b> Distractors solve a real but different risk.</td><td>all</td></tr>
+      <tr><td>3</td><td><b>Lightest solution that solves the problem.</b> Fewest primitives, zero-shot first, workflow before agent, default Sonnet, MCP only when reused.</td><td>M1</td></tr>
+      <tr><td>4</td><td><b>Governance first.</b> Compliance, procurement, data residency exclude options before cost, latency, convenience.</td><td>M1,M2,M4</td></tr>
+      <tr><td>5</td><td><b>Rules/real-time facts/computation → code or systems. Language work → Claude. High-stakes decisions → a human.</b></td><td>M1</td></tr>
+      <tr><td>6</td><td><b>Stable knowledge → retrieval. Live state → tools.</b> Using RAG instead of a tool call is the most common mistake.</td><td>M1</td></tr>
+      <tr><td>7</td><td><b>Every change is an eval-gated release</b>, with the threshold set before the run (model swap, prompt edit, context change).</td><td>M1,M2</td></tr>
+      <tr><td>8</td><td><b>Look at distributions and segments, not averages.</b> Token distribution, p95 latency, eval score by segment.</td><td>M2</td></tr>
+      <tr><td>9</td><td><b>Structure beats sentences.</b> Output contract, schema, hook, authorization &gt; a rule written into the prompt.</td><td>M1,M3</td></tr>
+      <tr><td>10</td><td><b>Prevention beats detection.</b> Ask: does this stop the bad output, or only help me find it afterward?</td><td>M1,M3</td></tr>
+    </table>
+  </div>
+
+  <h3>Common distractor patterns / 常见干扰项模式</h3>
+  <div class="card trap">
+    <ul>
+      <li>More context always improves quality.</li>
+      <li>The largest model is always safest.</li>
+      <li>A prompt instruction, a CLAUDE.md line, or a Skill is an enforceable guardrail.</li>
+      <li>Logging or a confirmation prompt equals least privilege.</li>
+      <li>MCP is always better than calling the API directly.</li>
+      <li>When multi-agent breaks, rerun the whole pipeline or add more logging.</li>
+      <li>Average latency or average accuracy met the SLA.</li>
+      <li>The vendor already ran a bias evaluation, so fairness is handled.</li>
+      <li>When the stem signals latency or a configuration problem, "none required" is the safe answer.</li>
+    </ul>
+  </div>
+
+  <h2>5. Four model properties <span class="tag">foundation of everything else</span></h2>
+  <div class="card">
+    <table>
+      <tr><th>Property</th><th>Good at</th><th>Bad at</th><th>Design response</th></tr>
+      <tr><td>Next-token prediction / non-determinism</td><td>Pattern-rich language work: summarize, rewrite, explain, draft</td><td>Exact details: names, dates, citations, statistics; same input, different output</td><td><b>Eval.</b> One clean demo is not evidence. Verification loops, citations, facts go to tools</td></tr>
+      <tr><td>Knowledge boundary</td><td>Common, stable, well-documented topics</td><td>Rare, private, recent, fast-changing facts — stated confidently anyway</td><td><b>Retrieval and tools.</b> External systems are the source of truth</td></tr>
+      <tr><td>Working memory (finite context)</td><td>Anything inside the context window</td><td>The window edge is a cliff; quality degrades before the hard limit</td><td><b>Context strategy</b> is a design decision: progressive loading, chunking, compaction</td></tr>
+      <tr><td>Steerability / confidence ≠ correctness</td><td>Short, specific, verifiable, formatted instructions</td><td>Vague goals, long reasoning chains, precise arithmetic — wrong answers delivered just as confidently</td><td><b>HITL placement and verification.</b> Schema, code execution, review where errors cost most</td></tr>
+    </table>
+    <p><b>Mnemonic:</b> Unpredictable → test it. Doesn't know → go retrieve it. Doesn't fit → make a choice. Can't tell right from wrong → go verify.</p>
+    <p class="zh">不可预测 → 测试它。不知道 → 去取。装不下 → 做选择。分不清对错 → 去核查。判定规则：针对根本原因，而不是症状。</p>
+  </div>
+
+  <h2>6. AI Fluency 4D framework <span class="new">新增 / added</span></h2>
+  <p>Not a formal Section 6 objective, but stems borrow its vocabulary.</p>
+  <div class="card">
+    <table>
+      <tr><th>Capability</th><th>Means</th><th>Maps to architecture work</th><th>Domain</th></tr>
+      <tr><td>Delegation</td><td>Decide what goes to AI, human, or both. Modes: automation, augmentation, agency</td><td>Decomposition — who owns each capability</td><td>D1</td></tr>
+      <tr><td>Description</td><td>Tell the AI the product, process, and performance you want</td><td>Prompt &amp; context engineering; stakeholder framing</td><td>D2, D6</td></tr>
+      <tr><td>Discernment</td><td>Judge output, reasoning, behavior: accept / revise / reject</td><td>Eval, LLM-as-judge, HITL placement</td><td>D4, D5</td></tr>
+      <tr><td>Diligence</td><td>Own responsibility: use tools responsibly, stay transparent, verify before deploy</td><td>Governance, checklists, accountability checkpoints</td><td>D5, D6, D7</td></tr>
+    </table>
+    <p class="zh">描述和辨别构成一个循环：描述、评判、改进。</p>
+  </div>
+
+  <h2>7. Exam mechanics at a glance</h2>
+  <div class="grid2">
+    <div class="card">
+      <h4>Format</h4>
+      <ul>
+        <li>63 items, 120 minutes (≈1.9 min/item)</li>
+        <li>Multiple-choice and multiple-response (stem states how many to select)</li>
+        <li>Scaled score 100–1000, pass = 720, criterion-referenced</li>
+        <li>Score report: pass/fail + domain percent-correct (domain % does not decide pass/fail)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Policy need-to-knows</h4>
+      <ul>
+        <li>Retakes: 14 / 30 / 90-day waits after 1st/2nd/3rd fail; max 4 attempts / 12 months</li>
+        <li>Cancel/reschedule ≥24h ahead or forfeit the $175 fee</li>
+        <li>Credential valid 12 months; free renewal assessment on time</li>
+        <li>No API parameter names, CLI flags, or file paths — Professional reads like a client mission, not a syntax quiz</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>8. Your logged weak spots across all modules</h2>
+  <div class="card weak">
+    <ul>
+      <li><span class="pill d2">D2</span> Select appropriate Claude models based on trade-offs</li>
+      <li><span class="pill d2">D2</span> Optimize context windows and manage token usage</li>
+      <li><span class="pill d3">D3</span> Evaluate connection protocols (MCP, API/CLI, agent-to-agent)</li>
+      <li><span class="pill d3">D3</span> Evaluate tool/agent configuration for capability bloat</li>
+      <li><span class="pill d3">D3</span> Evaluate progressive discovery vs. monolithic context strategy</li>
+      <li><span class="pill d3">D3</span> Analyze observability challenges and select monitoring strategies at scale</li>
+      <li><span class="pill d4">D4</span> Design evaluation datasets and test frameworks using mixed methodologies</li>
+      <li><span class="pill d4">D4</span> Evaluate accuracy-latency trade-offs and justify configuration decisions</li>
+      <li><span class="pill d4">D4</span> Conduct A/B testing and iterative improvements</li>
+      <li><span class="pill d5">D5</span> Implement guardrails and safety controls</li>
+      <li><span class="pill d6">D6</span> Document architectures and provide implementation guidance</li>
+      <li><span class="pill d6">D6</span> Manage stakeholder feedback loops and expectation alignment</li>
+    </ul>
+    <p>Drill these first every session. Spaced repetition: miss → stage 0 (review next session) → pass → stage 1 (+3 days) → pass → stage 2 (+7 days) → pass → cleared. Any miss resets to stage 0.</p>
+  </div>
+
+  <div class="footer-nav">
+    <span></span>
+    <a href="/module-1">Module 1: Platform &amp; Solution Design →</a>
+  </div>
+`;

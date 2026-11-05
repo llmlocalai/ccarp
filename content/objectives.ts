@@ -1,0 +1,58 @@
+export const objectivesHtml = `
+<header class="page">
+    <div class="kicker">Section 9 equivalent · due-diligence index</div>
+    <h1>Section 6 Objective Coverage Index</h1>
+    <div class="sub">All 38 Exam Guide §6 objectives, mapped to where this package covers them. Objective names kept in English for exam alignment.</div>
+    
+  </header>
+
+  <div class="card">
+    <table>
+      <tr><th>Domain · Objective</th><th>Covered at</th></tr>
+      <tr><td><span class="pill d1">D1</span> Translate business problems into Claude-based AI solutions</td><td>Overview §3; M1 §1.5; M2 §2.3</td></tr>
+      <tr><td><span class="pill d1">D1</span> Design end-to-end architectures (input → processing → output → feedback loops)</td><td>M1 §1.8, §1.13; M4 §4.3</td></tr>
+      <tr><td><span class="pill d1">D1</span> Select appropriate architectural patterns (workflow, agentic, augmented LLM)</td><td>M1 §1.4, §1.6</td></tr>
+      <tr><td><span class="pill d1">D1</span> Design multi-agent systems and orchestration strategies</td><td>M1 §1.7; M2 §2.2</td></tr>
+      <tr><td><span class="pill d1">D1</span> Apply decomposition techniques for complex problem solving</td><td>M1 §1.5</td></tr>
+      <tr><td><span class="pill d1">D1</span> Align solutions to business value pillars</td><td>M2 §2.3 (five pillars, ROI)</td></tr>
+      <tr><td><span class="pill d2">D2</span> Select appropriate Claude models based on trade-offs</td><td>M1 §1.10</td></tr>
+      <tr><td><span class="pill d2">D2</span> Design system prompts, templates, and guardrails</td><td>M1 §1.11</td></tr>
+      <tr><td><span class="pill d2">D2</span> Apply prompt engineering techniques (zero-shot, few-shot, chain-of-thought)</td><td>M1 §1.11</td></tr>
+      <tr><td><span class="pill d2">D2</span> Optimize context windows and manage token usage</td><td>M1 §1.2, §1.10; M2 §2.2</td></tr>
+      <tr><td><span class="pill d2">D2</span> Implement prompt reuse strategies (caching, modular prompts, Skills)</td><td>M1 §1.11; M5 §5.1</td></tr>
+      <tr><td><span class="pill d3">D3</span> Evaluate tool/agent configuration for capability bloat</td><td>M2 §2.4; Overview rule 1</td></tr>
+      <tr><td><span class="pill d3">D3</span> Analyze authentication and authorization requirements to identify security gaps</td><td>M2 §2.4; M3 §3.3</td></tr>
+      <tr><td><span class="pill d3">D3</span> Evaluate accuracy-latency trade-offs and justify configuration decisions</td><td>M2 §2.2; M4 §4.5</td></tr>
+      <tr><td><span class="pill d3">D3</span> Analyze observability challenges and select monitoring strategies at scale</td><td>M2 §2.4, §2.5</td></tr>
+      <tr><td><span class="pill d3">D3</span> Design a RAG pipeline with appropriate chunking and indexing strategies</td><td>M1 §1.9</td></tr>
+      <tr><td><span class="pill d3">D3</span> Apply retrieval strategies matched to data shape and query pattern</td><td>M1 §1.8, §1.9</td></tr>
+      <tr><td><span class="pill d3">D3</span> Evaluate connection protocols (MCP, API/CLI, agent-to-agent)</td><td>M1 §1.4, §1.12</td></tr>
+      <tr><td><span class="pill d3">D3</span> Evaluate progressive discovery vs. monolithic context strategy</td><td>M1 §1.10</td></tr>
+      <tr><td><span class="pill d4">D4</span> Define evaluation metrics (accuracy, latency, cost, safety, security)</td><td>M2 §2.1, §2.2</td></tr>
+      <tr><td><span class="pill d4">D4</span> Design evaluation datasets and test frameworks using mixed methodologies</td><td>M2 §2.1</td></tr>
+      <tr><td><span class="pill d4">D4</span> Conduct A/B testing and iterative improvements</td><td>M2 §2.5</td></tr>
+      <tr><td><span class="pill d4">D4</span> Diagnose system issues (prompt failure, hallucinations, model mismatch)</td><td>M2 §2.5; M5 §5.3</td></tr>
+      <tr><td><span class="pill d4">D4</span> Optimize token usage, latency, and cost-performance trade-offs</td><td>M1 §1.10, §1.11; M2 §2.2, §2.3</td></tr>
+      <tr><td><span class="pill d4">D4</span> Monitor system performance using logging and observability tools</td><td>M2 §2.4, §2.5; M4 §4.3</td></tr>
+      <tr><td><span class="pill d5">D5</span> Implement guardrails and safety controls</td><td>M3 §3.1, §3.3; Overview rules 1, 9, 10</td></tr>
+      <tr><td><span class="pill d5">D5</span> Identify risks, limitations, and failure modes of LLM systems</td><td>Overview §5; M2 §2.2; M3 §3.2</td></tr>
+      <tr><td><span class="pill d5">D5</span> Apply human-in-the-loop validation strategies</td><td>M3 §3.5; M1 §1.5</td></tr>
+      <tr><td><span class="pill d5">D5</span> Ensure compliance with regulations (GDPR, HIPAA, FedRAMP)</td><td>M1 §1.12; M2 §2.4; M3 §3.6</td></tr>
+      <tr><td><span class="pill d5">D5</span> Address ethical AI considerations (bias, fairness, transparency)</td><td>M3 §3.4</td></tr>
+      <tr><td><span class="pill d6">D6</span> Conduct structured discovery and requirement gathering</td><td>M4 §4.1</td></tr>
+      <tr><td><span class="pill d6">D6</span> Communicate architectural decisions and trade-offs</td><td>M4 §4.2; M1 §1.12</td></tr>
+      <tr><td><span class="pill d6">D6</span> Manage stakeholder feedback loops and expectation alignment (SLAs)</td><td>M4 §4.3</td></tr>
+      <tr><td><span class="pill d6">D6</span> Document architectures and provide implementation guidance</td><td>M4 §4.4</td></tr>
+      <tr><td><span class="pill d6">D6</span> Support lifecycle phases (discovery, design, handoff, monitoring, iteration)</td><td>M4 §4.5, §4.6</td></tr>
+      <tr><td><span class="pill d7">D7</span> Configure Claude tools and environments for teams (e.g. Claude Code)</td><td>M5 §5.1; M1 §1.12</td></tr>
+      <tr><td><span class="pill d7">D7</span> Improve developer workflows using AI-assisted tooling</td><td>M5 §5.2</td></tr>
+      <tr><td><span class="pill d7">D7</span> Support debugging and operational issue resolution</td><td>M5 §5.3</td></tr>
+    </table>
+  </div>
+  <p class="zh">对照表：38 个考点逐一映射到本资料包的具体位置，可直接跳转到薄弱考点。</p>
+
+  <div class="footer-nav">
+    <a href="/exam-day">← Exam Day</a>
+    <a href="/samples">Official Sample Questions →</a>
+  </div>
+`;

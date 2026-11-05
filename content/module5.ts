@@ -1,0 +1,102 @@
+export const module5Html = `
+<header class="page">
+    <div class="kicker">Module 5 · ~10 pages in course</div>
+    <h1>Team Enablement &amp; Operational Productivity</h1>
+    <div class="sub">Exam domain: D7 (all three objectives, 7%), plus part of D4 (diagnosis)</div>
+    
+  </header>
+
+  <p class="en-first"><b>This module answers:</b> the system is built; how does the team use it well, and keep it healthy, without the architect in every issue? Three steps in order: configure the environment, lift the daily workflow, sustain operations.</p>
+
+  <h2>5.1 Team setup <span class="pill d7">D7 · Configure Claude tools and environments</span></h2>
+  <div class="card">
+    <ul>
+      <li><b>Environment = shared configuration.</b> For Claude Code: one project-level baseline — shared CLAUDE.md, agreed tools and MCP servers, agreed permission settings. Review, version, and improve once, instead of reconciling dozens of drifting personal configs.</li>
+      <li><b>Rollout = champion first, then waves.</b> One champion per department migrates a real workflow first, absorbs early friction, builds local examples, tunes the shared CLAUDE.md, and becomes frontline support. Then roll out in small peer batches. Turning everyone on at once creates confusion and a retreat to old habits.</li>
+      <li><b>Set a cost policy before the first bill:</b> default model, model allowlist, effort guidance, and per-person cost/rate caps. Ungoverned model choice multiplies across every member and every request.</li>
+    </ul>
+    <table>
+      <tr><th>Skill distribution method</th><th>Best fits</th><th>Governance &amp; rollback</th></tr>
+      <tr><td>Org-provisioned Skill</td><td>Everyone in the org should have it</td><td>Owner controls availability; can't pin a version, no native rollback (manual re-upload only). Weakest rollback</td></tr>
+      <tr><td>Plugin assigned to a user group or the whole org</td><td>A specific team, or anything needing controlled rollout</td><td>Group targeting, install preference (required / default-install / optional / unavailable — <span class="new">added</span>), version-controlled updates from a repo. <b>Strongest people-facing governance</b></td></tr>
+      <tr><td>Claude Code project Skill (.claude/skills/)</td><td>One team's coding convention across its own repos</td><td>Versioned and rolled back via git; scoped only to the repo that contains it</td></tr>
+      <tr><td>API Skill (Messages API container)</td><td>A partner's own product calling it programmatically</td><td>Governed in the calling system; explicitly pinned version; machine-to-machine</td></tr>
+    </table>
+    <div class="pract card">
+      <h4>Practice: the Skill-distribution decision order</h4>
+      <ol>
+        <li>Caller is a program, not a person? → <b>API Skill.</b> Decided before governance even enters.</li>
+        <li>The artifact lives in a repo as a coding asset? → <b>Project Skill.</b> Rollback is inherited from git.</li>
+        <li>Otherwise, for people teams: does it need centralized versioning and rollback, whatever the audience size? Yes → <b>plugin.</b> No, and it genuinely applies to everyone → <b>org-provisioned Skill.</b></li>
+      </ol>
+      <p>Audience size alone never decides step 3 — two questions about "everyone" can have opposite correct answers. Centrally managed Claude Code settings are a separate settings channel, not a Skill-distribution path — a common distractor.</p>
+    </div>
+  </div>
+  <div class="card trap">
+    <h4>Exam trap</h4>
+    <p>Pushing a shared Skill as a flat package with no version and no rollback. One bad edit propagates to every team, producing bad output continuously during a manual fix. Any shared asset needs a version, an owner, and a rollback path.</p>
+  </div>
+
+  <h2>5.2 Developer workflows <span class="pill d7">D7 · Improve developer workflows</span></h2>
+  <div class="card">
+    <p>Put assistance inside the existing workflow (editor, code review, test loop), not in a side chat window. Encode conventions and repeated processes as Skills and project configuration.</p>
+    <table>
+      <tr><th>Stage</th><th>Claude helps with</th><th>Review discipline still required</th></tr>
+      <tr><td>Write code</td><td>Boilerplate, tests, a first implementation from a clear spec</td><td>Correctness and safety review; the author understands what was generated</td></tr>
+      <tr><td>Review code</td><td>Diff summaries, flagged possible issues, explaining unfamiliar code</td><td>The human decides; an AI flag is input, not a conclusion</td></tr>
+      <tr><td>Debug</td><td>Hypotheses from symptoms and traces</td><td>Verify with evidence before acting</td></tr>
+    </table>
+    <p><b>Two adoption failures:</b> uneven adoption (a few heavy users, many non-users — fixed with champion + wave rollout), and staying at simple chat (never progressing to tool use, codebase-aware help, Skills — having permission isn't real adoption).</p>
+    <p><b>Diligence = a verification checklist</b> across four dimensions: <b>correctness, security, maintainability, human understanding</b> (the person merging can explain what the code does, including on untested inputs). Automate checklist items into tests and evals every change must pass.</p>
+  </div>
+  <div class="card trap">
+    <h4>Exam trap</h4>
+    <p>Tests are green, review is approved, but the author can't explain how one input is handled. Pause the merge. The missing control isn't a linter or a faster model — it's the checklist's "understanding" and "security" dimensions.</p>
+  </div>
+
+  <h2>5.3 Operational support <span class="pill d7">D7 · Support debugging</span> <span class="pill d4">D4 · Diagnose</span></h2>
+  <div class="card">
+    <p>The architect's job is translating symptoms into architectural root causes, and teaching that path to the team so they handle it themselves next time. Fixing every incident personally is firefighting, not enablement.</p>
+    <table>
+      <tr><th>Symptom</th><th>Likely cause</th><th>First action</th></tr>
+      <tr><td>Quality declining gradually, no code change</td><td>Model or prompt changed, or corpus growth caused retrieval drift</td><td>Rerun the eval set; check what changed in model, prompt, corpus</td></tr>
+      <tr><td>Latency spiking</td><td>Context grew, a tool slowed down, or caching stopped hitting</td><td>Trace the slowest link: tokens per request, slowest tool call, cache behavior</td></tr>
+      <tr><td>A tool fails intermittently</td><td>Authorization, rate limiting, or an unhandled error path</td><td>Check that tool's auth and rate limits; trace one failed call end to end</td></tr>
+      <tr><td>Cost rising with flat usage</td><td>Model tier silently escalated, or caching degraded</td><td>Check per-request tier and cache-hit rate against the budget model</td></tr>
+    </table>
+    <p><b>Autonomy is built, not granted:</b> a runbook (symptom → cause → action) and an escalation path (who owns what, when it leaves the team). Goal: the team only needs you for genuinely new problems.</p>
+  </div>
+  <div class="card trap">
+    <h4>Exam trap</h4>
+    <p>Dashboards are green all quarter while answer quality declines, because corpus growth outpaced the index and the runbook has no entry for "quality declining, no code change." Raising the model tier, disabling the cache, or rolling back the last deploy are distractors. Check model, prompt, and retrieval drift first.</p>
+  </div>
+
+  <div class="card weak">
+    <h4>Your logged weak spot — Module 5</h4>
+    <p><b>Configure Claude tools and environments:</b> the relationship between CLAUDE.md and the system prompt. System prompt = Anthropic's, in the <code>system</code> field (the published regulation). CLAUDE.md = your repo's desk procedure, inserted into <code>messages</code>. Neither is enforced — both are guidance.</p>
+  </div>
+
+  <h3>Module 5 self-test</h3>
+  <div class="card">
+    <ol>
+      <li>Which Skill-distribution method gives group targeting, versioned updates, and rollback all at once?</li>
+      <li>Why doesn't an org-provisioned Skill fit content that needs fast rollback?</li>
+      <li>Name four cost-policy controls.</li>
+      <li>Name the checklist's four dimensions. Which one catches "no one can explain this code"?</li>
+      <li>Traffic is flat but cost doubled. What two things do you check first?</li>
+    </ol>
+  </div>
+
+  <h3>中文要点</h3>
+  <div class="card">
+    <p class="zh">团队配置：共享基线（CLAUDE.md、工具与 MCP、权限）；先每部门一个 champion，再分批推广；上线前设好成本控制。</p>
+    <p class="zh">Skill 分发顺序：程序调用 → API Skill；代码库资产 → 项目 Skill；需要集中版本控制和回滚 → plugin；全员且不需版本 → 组织级 Skill。</p>
+    <p class="zh">开发流程：AI 嵌入现有流程；验证清单四维度：正确性、安全性、可维护性、提交者能解释代码。</p>
+    <p class="zh">运维：症状 → 原因 → 首个动作；质量缓慢下降先查模型、prompt、检索漂移。留下 runbook 和升级路径。</p>
+  </div>
+
+  <div class="footer-nav">
+    <a href="/module-4">← Module 4</a>
+    <a href="/cheat-sheet">One-page Cheat Sheet →</a>
+  </div>
+`;
