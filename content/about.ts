@@ -5,6 +5,11 @@ export const aboutHtml = `
 <div class="sub">Peter Shang (ds) · AI Portfolio Manager, DoD Financial Management · Passed CCAR-P, Nov 2026</div>
 </header>
 
+<div class="card pract">
+<p><b>Status:</b> I am now a Claude Certified Architect &ndash; Professional (CCAR-P). This page is the record of how I got there in a week, followed by a timeline and a page applying the material to a real production build.</p>
+<p class="zh">现状：我已通过 Claude Certified Architect – Professional（CCAR-P）认证。本页记录了我如何在一周内完成备考，后面附有时间线，另有一页展示如何把考试内容应用到真实的生产项目中。</p>
+</div>
+
 <h2>Who I am</h2>
 <div class="card">
 <p>I lead three teams building AI, ML, and RPA automation for DoD financial management, with hands-on depth in federal accounting systems, audit remediation under FIAR and DODIG, and budget execution analytics. I came into this exam as an architect who already knew how to run a program, and had to learn how Anthropic wants that judgment applied to Claude specifically.</p>
@@ -25,6 +30,21 @@ export const aboutHtml = `
 <li><b>Track weak spots by name, not by feeling.</b> After every practice set I logged the specific Section 6 objective I missed, by its exact title, and drilled it on a spaced schedule: next session, then three days later, then a week later. A miss reset the clock. This is the same discipline as a corrective action plan after an NFR. You do not get to call a control fixed because it felt better.</li>
 <li><b>Run two full mixed mock exams before the real one.</b> 63 items, 120 minutes, scored by domain. I did not call myself ready until both mocks cleared the readiness bar across every domain. A mock that misses the bar is not a pass, it is a schedule change.</li>
 </ol>
+</div>
+
+<h2>The one-week timeline</h2>
+<div class="card">
+<table>
+<tr><th>Day</th><th>What I did</th></tr>
+<tr><td><b>Day 1</b></td><td>Read the Exam Guide v1.0 end to end. Mapped the seven domains and their weights (17/13/19/16/14/14/7). Self-rated every Section 6 objective 1-5 and flagged the real gaps: Claude model and context tradeoffs, integration protocol choice, capability bloat, progressive discovery vs. monolithic context, observability, formal evaluation. Skipped deep review of governance, audit, and stakeholder management; I already run those day to day.</td></tr>
+<tr><td><b>Day 2</b></td><td>Built the decision chain (discovery, decomposition, pattern, architecture, model and context, integration, eval, safety, stakeholder, handoff) and wrote the ten tie-breaker rules. Started the capstone's architecture decision record alongside the reading, so every rule had a concrete case to test against immediately.</td></tr>
+<tr><td><b>Day 3</b></td><td>Full pass on Domain 3, Integration, the largest single domain and my weakest. Drilled MCP vs. direct API vs. agent-to-agent, least privilege, and capability bloat using the obligation agent's own tool surface as the worked example.</td></tr>
+<tr><td><b>Day 4</b></td><td>Domain 2 (models, prompting, context) and Domain 4 (evaluation). Built the capstone's eval harness for real: golden dataset, code-based scoring for deterministic checks, LLM-as-judge for the rest, segment-level reporting.</td></tr>
+<tr><td><b>Day 5</b></td><td>Domains 5 and 6: guardrails, risk register, stakeholder brief, lifecycle. Wrote the capstone's risk register and stakeholder brief using the same control-owner-evidence structure as an NFR corrective action plan. First timed mixed mock: missed the bar in Integration.</td></tr>
+<tr><td><b>Day 6</b></td><td>Targeted drill on every objective missed in the Day 5 mock, logged by exact Section 6 title, not by feeling. Second full mixed mock: cleared 80% overall with no domain under 65%.</td></tr>
+<tr><td><b>Day 7</b></td><td>Light review only: cheat sheet, objective index, the three official sample questions as a final calibration check. Sat the exam. Passed.</td></tr>
+</table>
+<p class="zh">一周时间线：第 1 天通读考试指南并评估各考点差距；第 2 天搭建决策链和十条判断规则，同步启动毕业项目的架构决策记录；第 3 天专攻最大且最弱的集成领域；第 4 天完成模型/上下文和评测相关内容及评测框架搭建；第 5 天完成护栏、风险台账、业务方沟通内容，并进行第一次模考（集成领域未达标）；第 6 天针对薄弱考点专项复习，第二次模考全部达标；第 7 天只做轻量复习并参加考试，通过。</p>
 </div>
 
 <h2>The hardest domain, for me</h2>
@@ -49,6 +69,6 @@ export const aboutHtml = `
 
 <div class="footer-nav">
 <a href="/samples">← Official Samples</a>
-<a href="/">Overview →</a>
+<a href="/production-playbook">Production Playbook →</a>
 </div>
 `;

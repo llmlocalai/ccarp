@@ -17,6 +17,7 @@ const resources = [
   { href: "/objectives", label: "Objective Index" },
   { href: "/samples", label: "Official Samples" },
   { href: "/exam-day", label: "Exam Day" },
+  { href: "/production-playbook", label: "Production Playbook" },
   { href: "/about", label: "About / How I Passed in a Week" },
 ];
 
