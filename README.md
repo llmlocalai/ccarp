@@ -1,15 +1,22 @@
-# CCAR-P Study
+# CCAR-P Study Package
 
-A bilingual (English/Chinese), black-and-gold Next.js study site for the
-Claude Certified Architect – Professional (CCAR-P) exam.
+Open `index.html` first — it links to every other page. Works offline in any browser (double-click, no server needed).
 
-Covers the big-picture decision chain, five modules mapped to the seven
-exam domains, a one-page cheat sheet, the Section 6 objective coverage
-index, Anthropic's own sample questions as a calibration baseline, and
-an About page on how the author passed CCAR-P in one week.
+## Contents
+- `index.html` — overview, big picture, blueprint weights, 12-step decision chain, 10 judgment rules, 4 model properties
+- `module1.html` — Claude Platform & Solution Design (D1, D2, part of D3)
+- `module2.html` — Enterprise Integration & Production (D3, D4)
+- `module3.html` — Responsible AI, Safety & Risk (D5)
+- `module4.html` — Stakeholder Engagement & Lifecycle (D6)
+- `module5.html` — Team Enablement & Ops Productivity (D7)
+- `cheatsheet.html` — one-page stem-signal → answer table (the only page to re-read right before the exam)
+- `objectives-index.html` — all 38 Section 6 objectives mapped to where they're covered
+- `samples.html` — the 3 official Exam Guide sample questions, with click-to-reveal rationale (baseline only, never reused as quiz content)
+- `exam-day.html` — format, pacing, logistics, readiness gate
+- `CCAR-P-Study-Package.pdf` — all ten pages merged into one printable PDF (50 pages), same content and diagrams as the HTML
+- `assets/` — shared stylesheet and quiz-interaction script
 
-Dark mode by default with a light-mode switch, top-right navigation,
-mobile-friendly. Deploy target: https://ccarpnote.vercel.app
+## Scope and sourcing
+Built entirely from material already in the CCAR-P project: the official Exam Guide v1.0, Peter's course notes (CCAR-P-核心知识点-中文版.docx), the study-log weak-spot tracker, and the real-exam calibration notes. No outside claims about the live item bank — the only three "official" items are the Exam Guide's own Section 8 samples, clearly marked as a baseline, not quiz practice.
 
-Source material lives in `ccar-p-package/` (the original static HTML/PDF
-package); `content/*.ts` is extracted from it for the Next.js app.
+A few technical specifics inside (cache pricing/TTL, permission-mode names, stop-reason details) are flagged `[verify]` or "added" — cross-check against docs.claude.com before relying on exact numbers, per the tutor's rule 6.
